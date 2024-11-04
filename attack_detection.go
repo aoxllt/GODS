@@ -62,9 +62,7 @@ var matchrules []Rule
 
 // RuleManager 用于管理规则的加载和更新
 type RuleManager struct {
-	Rules    []Rule
 	mu       sync.RWMutex
-	ruleFile string
 	stopChan chan struct{}
 }
 
@@ -97,7 +95,6 @@ func writeLog(message string) error {
 // NewRuleManager 创建一个新的规则管理器
 func NewRuleManager() *RuleManager {
 	return &RuleManager{
-		Rules:    []Rule{},
 		stopChan: make(chan struct{}),
 	}
 }
@@ -231,9 +228,9 @@ func detectPortScan(packet PacketInfo, description string) {
 	if ipPortAttempts[key] > portScanThreshold && ipPortFlag[key] == false {
 		ipPortFlag[key] = true
 		if description == "alert" {
-			LogAlert(fmt.Sprintf("Alert: 可能存在端口扫描，源IP: %s, 目标IP: %s\n", packet.SrcIP, packet.DstIP))
+			LogAlert(fmt.Sprintf("Alert: 可能存在端口扫描，源IP: %s, 目标IP: %s;数据内容: %s\n", packet.SrcIP, packet.DstIP, packet.Data))
 		} else {
-			LogAlert(fmt.Sprintf("Log: 可能存在端口扫描，源IP: %s, 目标IP: %s\n", packet.SrcIP, packet.DstIP))
+			LogAlert(fmt.Sprintf("Log: 可能存在端口扫描，源IP: %s, 目标IP: %s;数据内容: %s\n", packet.SrcIP, packet.DstIP, packet.Data))
 		}
 
 	}
@@ -265,9 +262,9 @@ func synCheck(packet PacketInfo) {
 			if synFloodAttempts[key] > synFloodThreshold && synFloodFlag[key] == false {
 				synFloodFlag[key] = true
 				if rule.Description == "log" {
-					LogAlert(fmt.Sprintf("Log: 可能存在 SYN 洪泛攻击，源IP: %s\n", packet.SrcIP))
+					LogAlert(fmt.Sprintf("Log: 可能存在 SYN 洪泛攻击，源IP: %s;数据内容: %s\n", packet.SrcIP, packet.Data))
 				} else {
-					LogAlert(fmt.Sprintf("Alert: 可能存在 SYN 洪泛攻击，源IP: %s\n", packet.SrcIP))
+					LogAlert(fmt.Sprintf("Alert: 可能存在 SYN 洪泛攻击，源IP: %s;数据内容: %s\n", packet.SrcIP, packet.Data))
 				}
 			}
 			break
@@ -296,10 +293,9 @@ func DoSCheck(packet PacketInfo, description string) {
 	if doSAttempts[key] > doSThreshold && doSFlag[key] == false {
 		doSFlag[key] = true
 		if description == "log" {
-			LogAlert(fmt.Sprintf("Log: 可能存在拒绝服务攻击，源IP: %s\n", packet.SrcIP))
-			fmt.Println(2)
+			LogAlert(fmt.Sprintf("Log: 可能存在拒绝服务攻击，源IP: %s;数据内容: %s\n", packet.SrcIP, packet.Data))
 		} else {
-			LogAlert(fmt.Sprintf("Alert: 可能存在拒绝服务攻击，源IP: %s\n", packet.SrcIP))
+			LogAlert(fmt.Sprintf("Alert: 可能存在拒绝服务攻击，源IP: %s;数据内容: %s\n", packet.SrcIP, packet.Data))
 		}
 
 	}
@@ -345,9 +341,9 @@ func BruteForceCheck(packet PacketInfo, description string) {
 	if bruteForceAttempts[key] > bruteForceThreshold && bruteForceFlag[key] == false {
 		bruteForceFlag[key] = true
 		if description == "log" {
-			LogAlert(fmt.Sprintf("Log: 可能存在口令爆破攻击，用户: %s, 源IP: %s\n", username, packet.SrcIP))
+			LogAlert(fmt.Sprintf("Log: 可能存在口令爆破攻击，用户: %s, 源IP: %s;数据内容: %s\n", packet.SrcIP, packet.DstIP, packet.Data))
 		} else {
-			LogAlert(fmt.Sprintf("Alert: 可能存在口令爆破攻击，用户: %s, 源IP: %s\n", username, packet.SrcIP))
+			LogAlert(fmt.Sprintf("Alert: 可能存在口令爆破攻击，用户: %s, 源IP: %s;数据内容: %s\n", packet.SrcIP, packet.DstIP, packet.Data))
 		}
 	}
 }
