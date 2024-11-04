@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	portScanThreshold    = 200
+	portScanThreshold    = 1300
 	timeWindow           = 10 * time.Second // 时间窗口
 	ipPortFlag           = make(map[string]bool)
 	ipPortAttempts       = make(map[string]int)
@@ -28,7 +28,7 @@ var (
 	bruteForceTimestamp  = make(map[string]time.Time) // 存储时间戳
 	bruteForceFlag       = make(map[string]bool)
 	bruteForceTimeWindow = 10 * time.Second // 时间窗口
-	doSThreshold         = 3000             // 设定的阈值
+	doSThreshold         = 2000             // 设定的阈值
 	doSAttempts          = make(map[string]int)
 	doSTimestamp         = make(map[string]time.Time)
 	doSTimeWindow        = 10 * time.Second // 时间窗口
