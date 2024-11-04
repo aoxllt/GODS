@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	portScanThreshold    = 2000
+	portScanThreshold    = 200
 	timeWindow           = 10 * time.Second // 时间窗口
 	ipPortFlag           = make(map[string]bool)
 	ipPortAttempts       = make(map[string]int)
@@ -130,7 +130,7 @@ func (rm *RuleManager) LoadRules(globalRules *[]string) {
 func parseRules(line string) (Rule, error) {
 	var r Rule
 	// 使用 Sscanf 解析行，并确保字段传入地址
-	_, _ = fmt.Sscanf(line, "%s %s %s %s -> %s %s (msg:\"%s \"; )",
+	_, _ = fmt.Sscanf(line, "%s %s %s %s -> %s %s (msg:\"%s \";)",
 		&r.Description, &r.Protocol, &r.SrcIP, &r.SrcPort, &r.DstIP, &r.DstPort, &r.AttackType)
 
 	anyCount := 0

@@ -233,7 +233,7 @@ func changeRules(index int, a fyne.App) {
 		logType := logTypeEntry.Selected
 
 		// 创建Snort规则
-		rule := CreateSnortRule(srcIP, srcPort, destIP, destPort, protocol, logType, "修改的规则")
+		rule := CreateSnortRule(srcIP, srcPort, destIP, destPort, protocol, logType, attackType)
 
 		// 检查规则是否已存在（排除当前规则）
 		if containsRule(rule) && rules[index] != rule {
@@ -267,12 +267,8 @@ func parseRule(rule string) ParsedRule {
 	var msg string // 用于接收消息部分
 
 	// 示例解析：根据你的规则格式解析
-	_, err := fmt.Sscanf(rule, "%s %s %s %s -> %s %s (msg:\"%s detected\"; sid:%d;)",
+	_, _ = fmt.Sscanf(rule, "%s %s %s %s -> %s %s (msg:\"%s detected\"; sid:%d;)",
 		&parsed.logType, &parsed.protocol, &parsed.srcIP, &parsed.srcPort, &parsed.destIP, &parsed.destPort, &msg)
-
-	if err != nil {
-		log.Printf("规则解析失败: %v", err)
-	}
 
 	// 提取攻击类型
 	if len(msg) > 0 {
