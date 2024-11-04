@@ -240,7 +240,6 @@ func detectPortScan(packet PacketInfo, description string) {
 func synCheck(packet PacketInfo) {
 	mu.Lock()
 	defer mu.Unlock()
-	fmt.Println(1)
 	for _, rule := range matchrules {
 		if rule.AttackType == "SYN洪泛" {
 			if rule.DstIP != packet.DstIP && rule.DstIP != "any" {
